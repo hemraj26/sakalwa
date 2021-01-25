@@ -1,0 +1,70 @@
+<dashboard script="html_input_date_control.js">
+  <label>HTML Date Picker</label>
+  <!-- Dumy Search to set From Date and To Date on load-->
+  <search>
+    <query>| makeresults 
+| eval fromDate=strftime(relative_time(now(),"-1d@d"),"%Y-%m-%d") 
+| eval toDate=strftime(now(),"%Y-%m-%d")</query>
+    <earliest>-1s@s</earliest>
+    <latest>now</latest>
+    <done>
+      <set token="tokFromDate">$result.fromDate$</set>
+      <set token="tokToDate">$result.toDate$</set>
+    </done>
+  </search>
+  <!-- Dumy Search to convert String Time to Epoch Time-->
+  <search>
+    <query>| makeresults 
+| eval earliestTime=strptime("$tokFromDate$","%Y-%m-%d") 
+| eval latestTime=strptime("$tokToDate$","%Y-%m-%d")</query>
+    <earliest>-1s@s</earliest>
+    <latest>now</latest>
+    <done>
+      <set token="tokEarliestTime">$result.earliestTime$</set>
+      <set token="tokLatestTime">$result.latestTime$</set>
+    </done>
+  </search>
+  <row>
+    <panel>
+      <title>Selected String Time - $tokFromDate$ - $tokToDate$</title>
+      <html>
+        <style>
+          .dateContainer{
+            display:flex;
+          }
+          .dateInput{
+            padding-right:15px;
+          }          
+        </style>
+        <div class="dateContainer">
+          <div class="dateInput">
+            <div>From Date:</div>
+            <input id="inputFromDate" type="date"/>
+          </div>
+          <div class="dateInput">
+            <div>To Date:</div>
+            <input id="inputToDate" type="date"/>
+          </div>
+        </div>
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Converted Epoch Time - $tokEarliestTime$ $tokLatestTime$</title>
+      <chart>
+        <title>Splunkd errors timechart by top 5 components</title>
+        <search>
+          <query>index=_internal sourcetype="splunkd" log_level!="INFO" component="*"
+| timechart count by component limit=5 usenull=f useother=f
+          </query>
+          <earliest>$tokEarliestTime$</earliest>
+          <latest>$tokLatestTime$</latest>
+        </search>
+        <option name="charting.axisTitleX.text">Time</option>
+        <option name="charting.axisTitleY.text">Count</option>
+        <option name="charting.chart.stackMode">stacked</option>
+      </chart>
+    </panel>
+  </row>
+</dashboard>
