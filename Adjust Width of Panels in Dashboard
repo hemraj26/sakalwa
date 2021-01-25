@@ -1,0 +1,91 @@
+<form>
+  <label>Adjust Width of Panels in Dashboard</label>
+  <fieldset submitButton="false">
+    <input type="time" token="tokTime" searchWhenChanged="true">
+      <label>Select Time</label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel depends="$alwaysHideCSS$">
+      <html>
+        <style>
+          #errorSinglePanel{
+           width:25% !important;
+          background-color: powderblue;
+          }
+          #errorStatsPanel{
+          height: 1270%; width:25% !important;
+           width:25% !important;
+          background-color: red;
+          }
+          #errorLineChartPanel{
+           height: 100px;
+          width: 5900px;
+          background-color: blue;
+          }
+        </style>
+      </html>
+    </panel>
+    <panel id="errorSinglePanel">
+      <title>Splunkd Errors (Single Value)</title>
+      <single>
+        <search>
+          <query>index=_internal sourcetype=splunkd log_level!=INFO
+| timechart count</query>
+          <earliest>$tokTime.earliest$</earliest>
+          <latest>$tokTime.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">trend</option>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="numberPrecision">0</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">inverse</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel id="errorStatsPanel">
+      <title>Top 5 Error (Stats)</title>
+      <table>
+        <search>
+          <query>index=_internal sourcetype=splunkd log_level!=INFO
+| top 5 component showperc=false</query>
+          <earliest>$tokTime.earliest$</earliest>
+          <latest>$tokTime.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+    <panel id="errorLineChartPanel">
+      <title>Splunkd Errors (Timechart)</title>
+      <chart>
+        <search>
+          <query>index=_internal sourcetype=splunkd log_level!=INFO
+| timechart count</query>
+          <earliest>$tokTime.earliest$</earliest>
+          <latest>$tokTime.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.drilldown">none</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+</form>
