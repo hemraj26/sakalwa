@@ -1,0 +1,19 @@
+<row>
+    <panel id="id2">
+      <html>
+
+  <style>
+    div.a {
+     font-size:15px;
+     }
+    #tableWithCustomColumnWidth th[data-sort-key=DisplayName] {
+          width: 180% !important;
+          .arial { font-family: Arial; } 
+     </style>
+     <body>
+<div class="a">Please visit <a href="https://status.siteimprove.com/" target="_blank"> Status of SiteImprove</a> for any information in regards with the coming scheduled maintenance window for the Site Improve API. In case there is, our recommendation is to wait to do the Accessibility Test until SiteImprove API will be active. </div>  
+<p>IMPORTANT: In case you do the test while SiteImprove API isn’t active, the test will not do anything in the application.</p>
+</body>
+</html>
+    </panel>
+  </row>
