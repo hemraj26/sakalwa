@@ -1,0 +1,110 @@
+<form script="custom_table_row_expansion.js" theme="dark">
+  <label>Welcome to Canary 1.2.6</label>
+  <search id="bAllErrorData">
+    <query>index=_internal 
+| bin _time span=1h
+| stats count by _time sourcetype component date_hour log_level
+    </query>
+    <earliest>$tokTime.earliest$</earliest>
+    <latest>$tokTime.latest$</latest>
+  </search>
+  <fieldset submitButton="false"></fieldset>
+  <row>
+    <panel id="panel_layout" depends="singleValuePane7">
+      <input id="input_link_split_by" type="link" token="tokSplit" searchWhenChanged="true">
+        <label></label>
+        <choice value="sourcetype">Migration</choice>
+        <choice value="component">Pega type by app</choice>
+        <choice value="log_level">Module gallery</choice>
+        <choice value="Disciaimers">Disciaimers</choice>
+        <default>log_level</default>
+      </input>
+      <html>
+        <style>
+          /* This Layout Panel Bottom Padding removed to merge Link Input with horizontal line */
+          #panel_layout .fieldset{
+            padding: 10px 12px 0px 12px !important;          
+          }
+          /* Increase width of Link input to have options in Single Line */
+          #input_link_split_by.input-link{
+            width: 720px !important;
+          }
+          /* Change from flex to -webkit-box for side by side layout */
+          #input_radio_split_by.input-link div[data-component="splunk-core:/splunkjs/mvc/components/LinkList"]{
+            display: -webkit-box !important;
+          }
+          /* Create Button Border to make them appear as Tabs */
+          #input_link_split_by.input-link button{
+            width: 180px !important;
+            border-top-color: rgb(2255, 255, 255);
+            border-top-style: solid;
+            border-top-width: 1px;
+            border-right-color: rgb(255, 255, 255);
+            border-right-style: solid;
+            border-right-width: 1px;
+            border-left-color: rgb(255, 255, 255);
+            border-left-style: solid;
+            border-left-width: 1px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+          }
+          /* Hide link input bottom message section to merge with Horizontal line */
+          .dashboard-panel #input_link_split_by label,
+          #input_link_split_by .splunk-choice-input-message{
+            display: none !important;
+          }
+          /* Remove padding from horizontal line */
+          #panel_layout .panel-body.html{
+            padding: 0px !important;
+          }
+          
+           #singleValuePane7{
+            width: 50% !important;
+          }
+          
+        </style>
+        <hr style="height:1px;border-width:0;color: black;background-color: white;margin: 0px;"/>
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel id="panel_single_snapshot">
+      <html depends="$alwaysHideCSSOverrideForDashboard$">
+        <style>
+          #panel_chart_line_error_trend{
+            width: 70% !important;
+          }
+          #panel_chart_pie_error_split{
+            width: 30% !important;
+          }
+          /* Font Size Color Adjustment for Series Compare in Chart Legend */
+          div#chart_line_error_trending svg g.highcharts-legend g.highcharts-legend-item text tspan:nth-child(2){
+             font-size: 120% !important;
+             fill: cyan !important;
+             font-weight: bold !important;
+          }
+          /* Trellis Layout CSS */
+          #single_snapshot #facet-viz_groupby_field_log_level_groupby_value_INFO rect{
+            fill: #006D9C !important;
+          }
+          #single_snapshot #facet-viz_groupby_field_log_level_groupby_value_WARN rect{
+            fill: #F8BE34 !important;
+          }
+          #single_snapshot #facet-viz_groupby_field_log_level_groupby_value_WARNING rect{
+            fill: #F8BE34 !important;
+          }
+          #single_snapshot #facet-viz_groupby_field_log_level_groupby_value_ERROR rect{
+            fill: #DC4E41 !important;
+          }
+        </style>
+      </html>
+      <table id="expand_with_events">
+        <search>
+          <query>index=_internal | stats count by sourcetype</query>
+          <earliest>-24h</earliest>
+          <latest>now</latest>
+        </search>
+      </table>
+    </panel>
+  </row>
+</form>
